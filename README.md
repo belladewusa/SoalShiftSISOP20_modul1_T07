@@ -112,7 +112,7 @@ soal : tampilkan 10 produk dengan profit terendah di negara bagian tersebut
 soal : Maka dari itu, kalian mencoba membuat script untuk mendownload 28 gambar dari "https://loremflickr.com/320/240/cat" menggunakan command wget dan menyimpan file dengan nama "pdkt_kusuma_NO" (contoh: pdkt_kusuma_1, pdkt_kusuma_2, pdkt_kusuma_3) serta jangan lupa untuk menyimpan log messages wget kedalam sebuah file "wget.log". .
 
 Source Code : 
-[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07 /soal3/shift3a.sh)
+[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/soal3/shift3a.sh)
 
 pertama-tama dicek dulu apa terdapat file `pdkt_kusuma_NO` , jika ada, penomoran akan dilanjutkan dari nomor yang terakhir, jika tidak ada, maka akan dibuat file dengan nama pdkt_kusuma_1 hingga pdkt_kusuma_28.  file di list menggunakan command `ls` . `Grep` untuk melakukan pencarian sebuah pattern dalam file teks pdkt_kusuma, kemudian di cut untuk mendapatkan nomornya saja. `short -n` , agar bisa dishort berdasarkan nilai numerik secara ascending. setelah itu nilai paling terakhir akan diambil dengan command `tail -1`. kemudian nilainya disimpan dalam variable `$C` . jika tidak ada nilai, variable `$c` tidak akan menyimpan nilai apapun, harusnya menyimpan nilai 0. looping dilakukan dari `$c + 1` sampai `$c + 29`. pada command wget terdapat opsi `-a` untuk mengappend log dari wget kedalam file yang dideklarasikan, dan opsi `-O` untuk mendeklarasikan nama file output hasil wget.
 
@@ -122,7 +122,7 @@ pertama-tama dicek dulu apa terdapat file `pdkt_kusuma_NO` , jika ada, penomoran
 soal: Karena kalian gak suka ribet, kalian membuat penjadwalan untuk menjalankan script download gambar tersebut. Namun, script download tersebut hanya berjalan[b] setiap 8 jam dimulai dari jam 6.05 setiap hari kecuali hari Sabtu
 
 Source Code : 
-[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07 /soal3/crontab)
+[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/soal3/crontab)
 
 Penjadwalan dilakukan dengan membuat crontab. Kita set yang paling awal adalah setiap menit ke-5 , lalu setiap 8 jam dari jam 6 hingga jam 23, tanggalnya bebas, bulannya bebas, dan yang terakhir setiap hari minggu hingga jumat (kecuali sabtu).
 
@@ -132,7 +132,7 @@ soal : Karena gambar yang didownload dari link tersebut bersifat random, maka ad
 
 
 Source Code : 
-[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07 /soal3/shift3bc.sh)
+[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/soal3/shift3bc.sh)
 
 
 Hal yang pertama dilakukan adalah mengecek file yang identic dengan cara mendapatkan location dari masing-masing log di file wget.log. jika ada yang sama maka itu adalah file duplicate. Tentukan nomor terakhir dari file “pdkt_kusuma”. Jika tidak ada yang sama maka `mkdir` directory tersebut. Selanjutnya kita menyimpan location yang sudah dicek tadi dengan menggunakan variable `$arr` dan `string` untuk memudahkan proses pengecekan. Looping berproses dari file pertama hingga file ke-`$end` . disimpan location dari file saat ini dengan `$loc`, kemudian gunakan `cat wget.log` untuk menampilkan isinya. Pipe ke dalam grep untuk mencari locationnya saja. Command head -$i untuk mengambil $i baris pertama, lalu `tail -1` untuk mengambil 1 yang terakhir. Kemudian di pipe lagi. Di cek file saat ini duplikat atau tidak menggunakan `$isDuplicate`. Pertama `$arr` akan di `echo-e` untuk mengeluarkan isinya, lalu hasilnya di pipe dengan command awk.  Selanjutnya diasumsikan file yang saat ini di cek bukan duplikat, tertera dalam block BEGIN. Kemudian cek dilakukan apa ada baris yang sama dengan $loc, jika yam aka file merupakan duplikan, ini tertera dalam block BODY. Terakhir nilai isDuplicate di print dan masuk kedalam variable `$isDuplicate` pada shell , ini tertera dalam block END. Kemudian pengecekan apakah file yang di-cek merupakan duplikat atau bukan . Jika iya, maka pindahkan file ke duplicate. Jika tidak, maka tambahkan `$loc` dari file baru tersebut kedalam `$arr` dan pindahkan file ke kenangan. Setelah itu, `wget.log` di pindahkan * kedalam `wget.log.bak`. Dan `wget.log` dihapus.
