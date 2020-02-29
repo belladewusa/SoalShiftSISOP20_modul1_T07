@@ -105,9 +105,75 @@ soal : tampilkan 10 produk dengan profit terendah di negara bagian tersebut
     mv $1 $namafile".txt"
    
    dengan menggunakan kodingan diatas mengembalikan enkripsi dari 2b ke normal
-   
-  
-  
-    
-    
-    
+## soal 3
+1 tahun telah berlalu sejak pencampakan hati Kusuma. Akankah sang pujaan hati kembali ke naungan Kusuma? Memang tiada maaf bagi Elen. Tapi apa daya hati yang sudah hancur, Kusuma masih terguncang akan sikap Elen. Melihat kesedihan Kusuma, kalian mencoba menghibur Kusuma dengan mengirimkan gambar kucing.
+### nomor A
+
+soal : Maka dari itu, kalian mencoba membuat script untuk mendownload 28 gambar dari "https://loremflickr.com/320/240/cat" menggunakan command wget dan menyimpan file dengan nama "pdkt_kusuma_NO" (contoh: pdkt_kusuma_1, pdkt_kusuma_2, pdkt_kusuma_3) serta jangan lupa untuk menyimpan log messages wget kedalam sebuah file "wget.log". .
+
+#!/bin/bash
+c=`ls | grep "pdkt_kusuma" | cut -d "_" -f 3 | sort -n | tail -1`
+
+if [[ $c =~ [^0-9] ]]
+then
+	c=0
+fi
+
+a=`expr $c + 1`
+b=`expr $c + 29`
+
+for ((i=a;i<+b;i++))
+do
+	wget -a $PWD/wget.log -O $PWD/"pdkt_kusuma_$i" https://loremflickr.com/320/240/cat
+done
+
+
+
+pertama-tama dicek dulu apa terdapat file `pdkt_kusuma_NO` , jika ada, penomoran akan dilanjutkan dari nomor yang terakhir, jika tidak ada, maka akan dibuat file dengan nama pdkt_kusuma_1 hingga pdkt_kusuma_28.  file di list menggunakan command `ls` . `Grep` untuk melakukan pencarian sebuah pattern dalam file teks pdkt_kusuma, kemudian di cut untuk mendapatkan nomornya saja. `short -n` , agar bisa dishort berdasarkan nilai numerik secara ascending. setelah itu nilai paling terakhir akan diambil dengan command `tail -1`. kemudian nilainya disimpan dalam variable `$C` . jika tidak ada nilai, variable `$c` tidak akan menyimpan nilai apapun, harusnya menyimpan nilai 0. looping dilakukan dari `$c + 1` sampai `$c + 29`. pada command wget terdapat opsi `-a` untuk mengappend log dari wget kedalam file yang dideklarasikan, dan opsi `-O` untuk mendeklarasikan nama file output hasil wget.
+
+### nomor B
+
+soal: Karena kalian gak suka ribet, kalian membuat penjadwalan untuk menjalankan script download gambar tersebut. Namun, script download tersebut hanya berjalan[b] setiap 8 jam dimulai dari jam 6.05 setiap hari kecuali hari Sabtu
+
+5 6-23/8 * * 0-5 /bin/bash /home/shift3a.sh
+Penjadwalan dilakukan dengan membuat crontab. Kita set yang paling awal adalah setiap menit ke-5 , lalu setiap 8 jam dari jam 6 hingga jam 23, tanggalnya bebas, bulannya bebas, dan yang terakhir setiap hari minggu hingga jumat (kecuali sabtu).
+
+### nomor C
+
+soal : Karena gambar yang didownload dari link tersebut bersifat random, maka ada kemungkinan gambar yang terdownload itu identik. Supaya gambar yang identik tidak dikira Kusuma sebagai spam, maka diperlukan sebuah script untuk memindahkan salah satu gambar identik. Setelah memilah gambar yang identik, maka dihasilkan gambar yang berbeda antara satu dengan yang lain. Gambar yang berbeda tersebut, akan kalian kirim ke Kusuma supaya hatinya kembali ceria. Setelah semua gambar telah dikirim, kalian akan selalu menghibur Kusuma, jadi gambar yang telah terkirim tadi akan kalian simpan kedalam folder /kenangan dan kalian bisa mendownload gambar baru lagi. [c] Maka dari itu buatlah sebuah script untuk mengidentifikasi gambar yang identik dari keseluruhan gambar yang terdownload tadi. Bila terindikasi sebagai gambar yang identik, maka sisakan 1 gambar dan pindahkan sisa file identik tersebut ke dalam folder ./duplicate dengan format filename "duplicate_nomor" (contoh : duplicate_200, duplicate_201). Setelah itu lakukan pemindahan semua gambar yang tersisa kedalam folder ./kenangan dengan format filename "kenangan_nomor" (contoh: kenangan_252, kenangan_253). Setelah tidak ada gambar di current directory, maka lakukan backup seluruh log menjadi ekstensi ".log.bak". Hint : Gunakan wget.log untuk membuat location.log yang isinya merupakan hasil dari grep "Location". *Gunakan Bash, Awk dan Crontab.
+
+#!/bin/bash
+end=`ls | grep "pdkt_kusuma" | cut -d "_" -f 3 | sort -n | tail -1`
+
+if [[ `ls $PWD | grep "kenangan"` != "kenangan" ]]
+then
+	mkdir $PWD/kenangan
+fi
+
+if [[ `ls $PWD | grep "duplicate"` != "duplicate" ]]
+then
+	mkdir $PWD/duplicate
+fi
+
+arr=""
+for ((i=1;i<=end;i++))
+do
+	loc="`cat $PWD/wget.log | grep "Location:" | head -$i | tail -1 | cut -d " " -f 2`"
+	isDuplicate=`echo -e $arr | awk -v loc=$loc 'BEGIN {isDuplicate=0} {if (loc==$0) isDuplicate=1} END {printf "%d", isDuplicate}'`
+	if [[ $isDuplicate == 1 ]]
+	then
+	mv $PWD/pdkt_kusuma_$i $PWD/duplicate/duplicate_$i
+else
+	arr="$arr$loc\n"
+	mv $PWD/pdkt_kusuma_$i $PWD/kenangan/kenangan_$i
+fi
+done
+
+cat $PWD/wget.log >> $PWD/wget.log.bak
+rm $PWD/wget.log
+
+Hal yang pertama dilakukan adalah mengecek file yang identic dengan cara mendapatkan location dari masing-masing log di file wget.log. jika ada yang sama maka itu adalah file duplicate. Tentukan nomor terakhir dari file “pdkt_kusuma”. Jika tidak ada yang sama maka `mkdir` directory tersebut. Selanjutnya kita menyimpan location yang sudah dicek tadi dengan menggunakan variable `$arr` dan `string` untuk memudahkan proses pengecekan. Looping berproses dari file pertama hingga file ke-`$end` . disimpan location dari file saat ini dengan `$loc`, kemudian gunakan `cat wget.log` untuk menampilkan isinya. Pipe ke dalam grep untuk mencari locationnya saja. Command head -$i untuk mengambil $i baris pertama, lalu `tail -1` untuk mengambil 1 yang terakhir. Kemudian di pipe lagi. Di cek file saat ini duplikat atau tidak menggunakan `$isDuplicate`. Pertama `$arr` akan di `echo-e` untuk mengeluarkan isinya, lalu hasilnya di pipe dengan command awk.  Selanjutnya diasumsikan file yang saat ini di cek bukan duplikat, tertera dalam block BEGIN. Kemudian cek dilakukan apa ada baris yang sama dengan $loc, jika yam aka file merupakan duplikan, ini tertera dalam block BODY. Terakhir nilai isDuplicate di print dan masuk kedalam variable `$isDuplicate` pada shell , ini tertera dalam block END. Kemudian pengecekan apakah file yang di-cek merupakan duplikat atau bukan . Jika iya, maka pindahkan file ke duplicate. Jika tidak, maka tambahkan `$loc` dari file baru tersebut kedalam `$arr` dan pindahkan file ke kenangan. Setelah itu, `wget.log` di pindahkan * kedalam `wget.log.bak`. Dan `wget.log` dihapus.
+
+
+
+
