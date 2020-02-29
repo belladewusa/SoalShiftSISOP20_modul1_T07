@@ -111,6 +111,7 @@ soal : tampilkan 10 produk dengan profit terendah di negara bagian tersebut
 
 soal : Maka dari itu, kalian mencoba membuat script untuk mendownload 28 gambar dari "https://loremflickr.com/320/240/cat" menggunakan command wget dan menyimpan file dengan nama "pdkt_kusuma_NO" (contoh: pdkt_kusuma_1, pdkt_kusuma_2, pdkt_kusuma_3) serta jangan lupa untuk menyimpan log messages wget kedalam sebuah file "wget.log". .
 
+Source Code : 
 [source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07 /soal3/shift3a.sh)
 
 pertama-tama dicek dulu apa terdapat file `pdkt_kusuma_NO` , jika ada, penomoran akan dilanjutkan dari nomor yang terakhir, jika tidak ada, maka akan dibuat file dengan nama pdkt_kusuma_1 hingga pdkt_kusuma_28.  file di list menggunakan command `ls` . `Grep` untuk melakukan pencarian sebuah pattern dalam file teks pdkt_kusuma, kemudian di cut untuk mendapatkan nomornya saja. `short -n` , agar bisa dishort berdasarkan nilai numerik secara ascending. setelah itu nilai paling terakhir akan diambil dengan command `tail -1`. kemudian nilainya disimpan dalam variable `$C` . jika tidak ada nilai, variable `$c` tidak akan menyimpan nilai apapun, harusnya menyimpan nilai 0. looping dilakukan dari `$c + 1` sampai `$c + 29`. pada command wget terdapat opsi `-a` untuk mengappend log dari wget kedalam file yang dideklarasikan, dan opsi `-O` untuk mendeklarasikan nama file output hasil wget.
@@ -120,6 +121,7 @@ pertama-tama dicek dulu apa terdapat file `pdkt_kusuma_NO` , jika ada, penomoran
 
 soal: Karena kalian gak suka ribet, kalian membuat penjadwalan untuk menjalankan script download gambar tersebut. Namun, script download tersebut hanya berjalan[b] setiap 8 jam dimulai dari jam 6.05 setiap hari kecuali hari Sabtu
 
+Source Code : 
 [source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07 /soal3/crontab)
 
 Penjadwalan dilakukan dengan membuat crontab. Kita set yang paling awal adalah setiap menit ke-5 , lalu setiap 8 jam dari jam 6 hingga jam 23, tanggalnya bebas, bulannya bebas, dan yang terakhir setiap hari minggu hingga jumat (kecuali sabtu).
@@ -128,6 +130,8 @@ Penjadwalan dilakukan dengan membuat crontab. Kita set yang paling awal adalah s
 
 soal : Karena gambar yang didownload dari link tersebut bersifat random, maka ada kemungkinan gambar yang terdownload itu identik. Supaya gambar yang identik tidak dikira Kusuma sebagai spam, maka diperlukan sebuah script untuk memindahkan salah satu gambar identik. Setelah memilah gambar yang identik, maka dihasilkan gambar yang berbeda antara satu dengan yang lain. Gambar yang berbeda tersebut, akan kalian kirim ke Kusuma supaya hatinya kembali ceria. Setelah semua gambar telah dikirim, kalian akan selalu menghibur Kusuma, jadi gambar yang telah terkirim tadi akan kalian simpan kedalam folder /kenangan dan kalian bisa mendownload gambar baru lagi. [c] Maka dari itu buatlah sebuah script untuk mengidentifikasi gambar yang identik dari keseluruhan gambar yang terdownload tadi. Bila terindikasi sebagai gambar yang identik, maka sisakan 1 gambar dan pindahkan sisa file identik tersebut ke dalam folder ./duplicate dengan format filename "duplicate_nomor" (contoh : duplicate_200, duplicate_201). Setelah itu lakukan pemindahan semua gambar yang tersisa kedalam folder ./kenangan dengan format filename "kenangan_nomor" (contoh: kenangan_252, kenangan_253). Setelah tidak ada gambar di current directory, maka lakukan backup seluruh log menjadi ekstensi ".log.bak". Hint : Gunakan wget.log untuk membuat location.log yang isinya merupakan hasil dari grep "Location". *Gunakan Bash, Awk dan Crontab.
 
+
+Source Code : 
 [source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07 /soal3/shift3bc.sh)
 
 
