@@ -141,6 +141,23 @@ PENYELESAIAN
 
 [source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/blob/master/soal3/shift3a.sh)
 
+    #!/bin/bash
+    c=`ls | grep "pdkt_kusuma" | cut -d "_" -f 3 | sort -n | tail -1`
+
+    if [[ $c =~ [^0-9] ]]
+     then
+    	c=0
+    fi
+
+    a=`expr $c + 1`
+    b=`expr $c + 29`
+
+    for ((i=a;i<+b;i++))
+       do
+	    wget -a $PWD/wget.log -O $PWD/"pdkt_kusuma_$i" https://loremflickr.com/320/240/cat
+    done
+
+
 pertama-tama dicek dulu apa terdapat file `pdkt_kusuma_NO` , jika ada, penomoran akan dilanjutkan dari nomor yang terakhir, jika tidak ada, maka akan dibuat file dengan nama pdkt_kusuma_1 hingga pdkt_kusuma_28.  file di list menggunakan command `ls` . `Grep` untuk melakukan pencarian sebuah pattern dalam file teks pdkt_kusuma, kemudian di cut untuk mendapatkan nomornya saja. `short -n` , agar bisa dishort berdasarkan nilai numerik secara ascending. setelah itu nilai paling terakhir akan diambil dengan command `tail -1`. kemudian nilainya disimpan dalam variable `$C` . jika tidak ada nilai, variable `$c` tidak akan menyimpan nilai apapun, harusnya menyimpan nilai 0. looping dilakukan dari `$c + 1` sampai `$c + 29`. pada command wget terdapat opsi `-a` untuk mengappend log dari wget kedalam file yang dideklarasikan, dan opsi `-O` untuk mendeklarasikan nama file output hasil wget.
 
 
