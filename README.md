@@ -123,7 +123,7 @@ soal: Karena kalian gak suka ribet, kalian membuat penjadwalan untuk menjalankan
  
 [source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/soal3/crontab)
 
-[source}(https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/blob/master/soal3/crontab)
+[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/blob/master/soal3/crontab)
 
 Penjadwalan dilakukan dengan membuat crontab. Kita set yang paling awal adalah setiap menit ke-5 , lalu setiap 8 jam dari jam 6 hingga jam 23, tanggalnya bebas, bulannya bebas, dan yang terakhir setiap hari minggu hingga jumat (kecuali sabtu).
 
