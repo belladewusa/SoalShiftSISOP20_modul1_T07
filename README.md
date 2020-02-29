@@ -139,7 +139,6 @@ soal : Maka dari itu, kalian mencoba membuat script untuk mendownload 28 gambar 
 PENYELESAIAN
 
 
-[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/blob/master/soal3/shift3a.sh)
 
     #!/bin/bash
     c=`ls | grep "pdkt_kusuma" | cut -d "_" -f 3 | sort -n | tail -1`
@@ -169,7 +168,8 @@ soal: Karena kalian gak suka ribet, kalian membuat penjadwalan untuk menjalankan
 PENYELESAIAN
 
 
-[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/blob/master/soal3/crontab)
+
+	5 6-23/8 * * 0-5 /bin/bash /home/shift3a.sh
 
 Penjadwalan dilakukan dengan membuat crontab. Kita set yang paling awal adalah setiap menit ke-5 , lalu setiap 8 jam dari jam 6 hingga jam 23, tanggalnya bebas, bulannya bebas, dan yang terakhir setiap hari minggu hingga jumat (kecuali sabtu).
 
@@ -179,7 +179,37 @@ soal : Karena gambar yang didownload dari link tersebut bersifat random, maka ad
 
 PENYELESAIAN
 
-[source](https://github.com/belladewusa/SoalShiftSISOP20_modul1_T07/blob/master/soal3/shift3bc.sh)
+
+	#!/bin/bash
+	end=`ls | grep "pdkt_kusuma" | cut -d "_" -f 3 | sort -n | tail -1`
+
+	if [[ `ls $PWD | grep "kenangan"` != "kenangan" ]]
+	then
+		mkdir $PWD/kenangan
+	fi
+
+	if [[ `ls $PWD | grep "duplicate"` != "duplicate" ]]
+	then
+		mkdir $PWD/duplicate
+	fi
+
+	arr=""
+	for ((i=1;i<=end;i++))
+	do
+		loc="`cat $PWD/wget.log | grep "Location:" | head -$i | tail -1 | cut -d " " -f 2`"
+		isDuplicate=`echo -e $arr | awk -v loc=$loc 'BEGIN {isDuplicate=0} {if (loc==$0) isDuplicate=1} END {printf "%d", 		isDuplicate}'`
+		if [[ $isDuplicate == 1 ]]
+		then
+		mv $PWD/pdkt_kusuma_$i $PWD/duplicate/duplicate_$i
+	else
+		arr="$arr$loc\n"
+		mv $PWD/pdkt_kusuma_$i $PWD/kenangan/kenangan_$i
+	fi
+	done
+
+	cat $PWD/wget.log >> $PWD/wget.log.bak
+	rm $PWD/wget.log
+
 
 
 Hal yang pertama dilakukan adalah mengecek file yang identic dengan cara mendapatkan location dari masing-masing log di file wget.log. jika ada yang sama maka itu adalah file duplicate. Tentukan nomor terakhir dari file “pdkt_kusuma”. Jika tidak ada yang sama maka `mkdir` directory tersebut. Selanjutnya kita menyimpan location yang sudah dicek tadi dengan menggunakan variable `$arr` dan `string` untuk memudahkan proses pengecekan. Looping berproses dari file pertama hingga file ke-`$end` . disimpan location dari file saat ini dengan `$loc`, kemudian gunakan `cat wget.log` untuk menampilkan isinya. Pipe ke dalam grep untuk mencari locationnya saja. Command head -$i untuk mengambil $i baris pertama, lalu `tail -1` untuk mengambil 1 yang terakhir. Kemudian di pipe lagi. Di cek file saat ini duplikat atau tidak menggunakan `$isDuplicate`. Pertama `$arr` akan di `echo-e` untuk mengeluarkan isinya, lalu hasilnya di pipe dengan command awk.  Selanjutnya diasumsikan file yang saat ini di cek bukan duplikat, tertera dalam block BEGIN. Kemudian cek dilakukan apa ada baris yang sama dengan $loc, jika yam aka file merupakan duplikan, ini tertera dalam block BODY. Terakhir nilai isDuplicate di print dan masuk kedalam variable `$isDuplicate` pada shell , ini tertera dalam block END. Kemudian pengecekan apakah file yang di-cek merupakan duplikat atau bukan . Jika iya, maka pindahkan file ke duplicate. Jika tidak, maka tambahkan `$loc` dari file baru tersebut kedalam `$arr` dan pindahkan file ke kenangan. Setelah itu, `wget.log` di pindahkan * kedalam `wget.log.bak`. Dan `wget.log` dihapus.
